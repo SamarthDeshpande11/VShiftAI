@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { parsePipeline } from '../services/pipelineApi';
 import { useStore } from '../store/store';
 
-export const PipelineSubmit = () => {
+export const PipelineSubmit = ({ theme, onToggleTheme }) => {
   const nodes = useStore((state) => state.nodes);
   const edges = useStore((state) => state.edges);
 
@@ -31,6 +31,15 @@ export const PipelineSubmit = () => {
   return (
     <>
       <div className="action-dock">
+        <button
+          type="button"
+          className={`theme-toggle ${theme === 'dark' ? 'is-dark' : ''}`}
+          onClick={onToggleTheme}
+        >
+          <span className="theme-toggle-icon">{theme === 'dark' ? '☀' : '🌙'}</span>
+          <span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
+        </button>
+
         <button
           className="submit-btn"
           onClick={handleSubmit}
