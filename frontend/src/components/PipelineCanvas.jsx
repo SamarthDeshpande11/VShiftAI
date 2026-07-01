@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import ReactFlow, { Controls, Background, MiniMap, BackgroundVariant, MarkerType } from 'reactflow';
+import ReactFlow, { Controls, Background, MiniMap, BackgroundVariant, getBezierPath } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
 import { useStore } from '../store/store';
@@ -12,6 +12,7 @@ import { DatabaseNode } from '../nodes/DatabaseNode';
 import { WebhookNode } from '../nodes/WebhookNode';
 import { JsonParserNode } from '../nodes/JsonParserNode';
 import { ConditionNode } from '../nodes/ConditionNode';
+import { WorkflowEdge } from '../edges/WorkflowEdge';
 
 import 'reactflow/dist/style.css';
 
@@ -19,19 +20,38 @@ const gridSize = 20;
 const proOptions = { hideAttribution: true };
 
 const defaultEdgeOptions = {
-  type: 'default',
-  style: { stroke: '#334155', strokeWidth: 2.75 },
-  markerEnd: {
-    type: MarkerType.ArrowClosed,
-    color: '#334155',
-    width: 18,
-    height: 18,
-  },
+  type: 'workflow',
 };
 
-const connectionLineStyle = {
-  stroke: '#6366F1',
-  strokeWidth: 2.75,
+// Animated bezier preview while dragging a connection
+const ConnectionLine = ({ fromX, fromY, fromPosition, toX, toY, toPosition }) => {
+  const [path] = getBezierPath({
+    sourceX: fromX,
+    sourceY: fromY,
+    sourcePosition: fromPosition,
+    targetX: toX,
+    targetY: toY,
+    targetPosition: toPosition,
+    curvature: 0.45,
+  });
+
+  return (
+    <g>
+      <path
+        d={path}
+        fill="none"
+        stroke="#6366F1"
+        strokeWidth={2.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray="6 4"
+        style={{
+          animation: 'edgeDash 600ms linear infinite',
+          opacity: 0.7,
+        }}
+      />
+    </g>
+  );
 };
 
 const nodeTypes = {
@@ -44,6 +64,10 @@ const nodeTypes = {
   webhook: WebhookNode,
   jsonParser: JsonParserNode,
   condition: ConditionNode,
+};
+
+const edgeTypes = {
+  workflow: WorkflowEdge,
 };
 
 const selector = (state) => ({
@@ -124,11 +148,11 @@ export const PipelineCanvas = () => {
         onDragOver={onDragOver}
         onInit={setReactFlowInstance}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         proOptions={proOptions}
         defaultEdgeOptions={defaultEdgeOptions}
-        connectionLineStyle={connectionLineStyle}
+        connectionLineComponent={ConnectionLine}
         snapGrid={[gridSize, gridSize]}
-        connectionLineType="default"
       >
         <Background variant={BackgroundVariant.Dots} color="#C9CDD4" gap={gridSize} size={1.2} />
         <Controls />
