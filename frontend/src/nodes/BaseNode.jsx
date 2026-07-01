@@ -28,6 +28,7 @@ export const BaseNode = ({
       {handles.map((handle, index) => {
         const isLeft = handle.position === Position.Left;
         const handleStyle = handle.style || {};
+        const labelTop = handleStyle.top || '50%';
 
         return (
           <div key={handle.id || index} className="base-node-handle-wrap">
@@ -41,7 +42,7 @@ export const BaseNode = ({
             {handle.label && (
               <span
                 className={`handle-label ${isLeft ? 'handle-label-left' : 'handle-label-right'}`}
-                style={{ top: handleStyle.top || '50%' }}
+                style={{ top: labelTop }}
               >
                 {handle.label}
               </span>

@@ -127,6 +127,7 @@ body {
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 14px;
+  font-weight: 450;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -192,7 +193,7 @@ body {
   min-height: 34px;
   font-family: var(--font-sans);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 550;
   color: var(--text-primary);
   background: var(--surface);
   border: 1px solid var(--border);
@@ -413,6 +414,8 @@ body {
   --node-accent: var(--accent);
   position: relative;
   width: 288px;
+  min-width: 288px;
+  max-width: 550px;
   font-family: var(--font-sans);
   color: var(--text-primary);
   background: var(--surface);
@@ -497,10 +500,11 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-4) var(--space-4) var(--space-3);
-  padding-left: calc(var(--space-4) + 4px);
+  padding: var(--space-3) var(--space-4);
   background: rgba(249, 250, 251, 0.92);
   border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  min-height: 48px;
 }
 
 .base-node-header-title {
@@ -508,12 +512,14 @@ body {
   align-items: center;
   gap: var(--space-2);
   min-width: 0;
+  flex: 1;
+  overflow: hidden;
 }
 
 .base-node-header-title > span:last-child {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
@@ -540,11 +546,15 @@ body {
 .base-node-id {
   flex-shrink: 0;
   font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 400;
+  font-size: 10px;
+  font-weight: 500;
   color: var(--text-muted);
-  opacity: 0.52;
-  letter-spacing: -0.01em;
+  opacity: 0.5;
+  letter-spacing: 0;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ─── Node Body & Footer ────────────────────────────────────────── */
@@ -552,14 +562,13 @@ body {
 .base-node-body {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
   padding: var(--space-4);
-  padding-left: calc(var(--space-4) + 4px);
+  min-height: 52px;
 }
 
 .base-node-footer {
   padding: var(--space-2) var(--space-4) var(--space-3);
-  padding-left: calc(var(--space-4) + 4px);
   border-top: 1px solid var(--border-subtle);
 }
 
@@ -568,6 +577,9 @@ body {
   font-size: 13px;
   line-height: 1.6;
   color: var(--text-secondary);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 /* ─── Fields ────────────────────────────────────────────────────── */
@@ -575,15 +587,18 @@ body {
 .base-node-field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 6px;
+  width: 100%;
 }
 
 .base-node-label {
-  font-size: 11px;
+  display: block;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--text-muted);
+  white-space: nowrap;
 }
 
 .base-node-input,
@@ -640,11 +655,21 @@ body {
   min-height: 40px;
   resize: none;
   line-height: 1.5;
+  overflow: hidden;
+  word-break: break-word;
 }
 
 /* ─── Handles ───────────────────────────────────────────────────── */
 
+/* transparent pass-through — the Handle and its sibling label both sit
+   inside here, but labels use `position:absolute` relative to .base-node */
+.base-node-handle-wrap {
+  position: static;
+  display: contents;
+}
+
 .custom-handle {
+
   width: 12px !important;
   height: 12px !important;
   background: var(--surface) !important;
@@ -674,21 +699,28 @@ body {
   position: absolute;
   font-family: var(--font-mono);
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-muted);
   pointer-events: none;
   white-space: nowrap;
   line-height: 1;
+  /* sit outside the card so it never overlaps any content */
 }
 
 .handle-label-left {
-  left: 18px;
+  /* anchor to the right of the left-handle dot, pointing outward left */
+  right: calc(100% + 10px);
+  left: auto;
   transform: translateY(-50%);
+  text-align: right;
 }
 
 .handle-label-right {
-  right: 18px;
+  /* anchor to the left of the right-handle dot, pointing outward right */
+  left: calc(100% + 10px);
+  right: auto;
   transform: translateY(-50%);
+  text-align: left;
 }
 
 /* ─── Action Dock ───────────────────────────────────────────────── */

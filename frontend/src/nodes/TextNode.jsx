@@ -62,14 +62,8 @@ export const TextNode = ({ id, data }) => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
+    // Reset height first so scrollHeight is accurate
     textarea.style.height = 'auto';
-    textarea.style.width = 'auto';
-
-    const lines = currText.split('\n');
-    const maxLineLength = Math.max(...lines.map((l) => l.length));
-
-    const calculatedWidth = Math.min(Math.max(maxLineLength * 8 + 32, 200), 450);
-    textarea.style.width = `${calculatedWidth}px`;
     textarea.style.height = `${textarea.scrollHeight}px`;
   }, [currText]);
 
@@ -101,7 +95,6 @@ export const TextNode = ({ id, data }) => {
       icon="TX"
       color="var(--color-text)"
       handles={handles}
-      style={{ width: 'fit-content' }}
     >
       <div className="base-node-field">
         <label className="base-node-label">Text</label>
